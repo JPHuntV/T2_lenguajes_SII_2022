@@ -55,3 +55,14 @@ esEcoAmigable(Fabricante, Modelo):-
     write("Estilo: "),write(Estilo),write("    Cilindraje: "),write(Cilindraje),write("  Autonomia: "),write(Autonomia),nl.
 
 /***********************************************************************************************************************************/
+
+/*
+E: Fabricante -> nombre de un fabricante, X->Cantidad de autos o predicado X
+S: -Si se indica X ( true si X == cantidad de autos del fabricante, false si no)
+    -Sin indicar X (Cantidad de autos del fabricante)
+R: X debe ser X o un numero 
+O: Saber cuántos modelos tiene un fabricante o validar si el número indicado es el correcto.
+*/
+produccionTotal(Fabricante, X):-
+    aggregate_all(count, nuevoVehiculo(Fabricante, vehiculo(_,_,_,_,_)), X).
+    
