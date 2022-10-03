@@ -57,6 +57,7 @@ esEcoAmigable(Fabricante, Modelo):-
 /***********************************************************************************************************************************/
 
 /*
+nombre: produccionTotal
 E: Fabricante -> nombre de un fabricante, X->Cantidad de autos o predicado X
 S: -Si se indica X ( true si X == cantidad de autos del fabricante, false si no)
     -Sin indicar X (Cantidad de autos del fabricante)
@@ -65,4 +66,41 @@ O: Saber cuántos modelos tiene un fabricante o validar si el número indicado e
 */
 produccionTotal(Fabricante, X):-
     aggregate_all(count, nuevoVehiculo(Fabricante, vehiculo(_,_,_,_,_)), X).
-    
+
+/*****************************************************************************************************************/
+
+/*
+nombre: esFinal
+E: Fabricante -> nombre del fabricante, Modelo -> modelo del vehiculo
+S: true si el vehiculo es final
+R: El vehículo debe de existir
+O: Determinar si un vehiculo es final (no tiene siguiente)
+*/
+esFinal(Fabricante, Modelo):-
+    \+ relacionar(Fabricante,Modelo,_),
+    write("Es final").
+
+
+/*
+nombre: esBase
+E: Fabricante -> nombre del fabricante, Modelo -> modelo del vehiculo
+S: true si el vehiculo es base
+R: El vehículo debe de existir
+O: Determinar si un vehiculo es base (no tiene anterior)
+*/
+esBase(Fabricante, Modelo):-
+    \+ relacionar(Fabricante,_,Modelo),
+    write("Es base").
+
+
+/*
+nombre: esIntermedio
+E: Fabricante -> nombre del fabricante, Modelo -> modelo del vehiculo
+S: true si el vehiculo es intermedio
+R: El vehículo debe de existir
+O: Determinar si un vehiculo es intermedio (tiene siguiente y anterior)
+*/
+esIntermedio(Fabricante, Modelo):-
+    relacionar(Fabricante,Modelo,_),
+    relacionar(Fabricante,_,Modelo),
+    write("Es intermedio").
