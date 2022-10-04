@@ -151,10 +151,39 @@ calcularRelacion(Fabricante, Modelo1, Modelo2,S,Res) :-
     calcularRelacion(Fabricante,X,Modelo2,String2,Res).
 /***************************************************************************************************************/
 
+/*
+Nombre: esConglomerado
+E: Fabricante -> Nombre de un fabricante
+S: Indica si es conglomerado o no 
+R: El fabricante debe existir
+O: Determinar si un fabricante es conglomerado (fabrica más de una marca)
+*/
+esConglomerado(Fabricante):-
+    nuevoVehiculo(Fabricante, vehiculo(Marca,_,_,_,_)),
+    esConglomeradoAux(Fabricante, Marca),
+    write("No es conglomerado"),nl.
+esConglomerado(Fabricante):-
+    nuevoVehiculo(Fabricante, vehiculo(Marca,_,_,_,_)),
+    \+ esConglomeradoAux(Fabricante, Marca),
+    write("Es conglomerado"),nl.
+
+/*
+Nombre: esConglomeradoAux
+E: Fabricante -> Nombre de un fabricante, Marca1 -> primera marca registrada del fabricante
+S: True si todas las marcas son iguales, False si no 
+R: El fabricante debe existir y la Marca1 debe ser una marca producida por dicho fabricante
+O: Compara todos los registros del fabricante para identificar si existe una marca diferente a la indicada
+    esto significa que produce más de un vehiculo
+*/
+esConglomeradoAux(Fabricante, Marca1):-
+    forall(nuevoVehiculo(Fabricante, vehiculo(Marca2,_,_,_,_)),
+        (
+            Marca1 == Marca2
+        )
+    ).
 
 
-
-
+/****************************************************************************************************************/
 validarFabricante(Fabricante):-
     nuevoVehiculo(Fabricante,vehiculo(_,_,_,_,_)).
 validarFabricante(Fabricante):-
