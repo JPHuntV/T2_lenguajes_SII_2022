@@ -104,3 +104,59 @@ esIntermedio(Fabricante, Modelo):-
     relacionar(Fabricante,Modelo,_),
     relacionar(Fabricante,_,Modelo),
     write("Es intermedio").
+
+/*********************************************************************************/
+
+/*
+nombre: relacionados + relacionadosAux
+E: Fabricante -> nombre del fabricante, (Modelo1, Modelo2) -> nombre de los modelos
+S: Ruta de la relación si están relacionados
+R: El fabricante y los modelos deben existir en la base de conocimiento
+O: Determinar si dos modelos están relacionados
+*/
+relacionados(Fabricante, Modelo1, Modelo2):-
+    relacionadosAux(Fabricante, Modelo1, Modelo2, Res),
+    write("Estan relacionados y esta es su ruta: "),
+    write(Res).
+relacionados(Fabricante, Modelo1, Modelo2):-
+    \+ relacionadosAux(Fabricante, Modelo1, Modelo2, _),
+    write("No estan relacionados.").
+
+relacionadosAux(Fabricante, Modelo1, Modelo2, Res):-
+    (calcularRelacion(Fabricante, Modelo1, Modelo2,"",Res2) ; calcularRelacion(Fabricante, Modelo2, Modelo1,"",Res2)),
+    Res = Res2.
+
+
+/*
+nombre: calcularRelacion
+E: Fabricante -> nombre del fabricante, (Modelo1, Modelo2) -> nombre de los modelos
+    S-> String con la cadena de la ruta
+    Res ->almacenará la ruta final
+S: Ruta de la relación si existe una
+R: El fabricante y los modelos deben existir en la base de conocimiento
+O: Calcular la ruta de relación entre dos vehiculos
+*/
+calcularRelacion(Fabricante, Modelo1, Modelo2,S,Res) :-
+    relacionar(Fabricante,Modelo1,X),
+    X == Modelo2,
+    string_concat(Modelo1,' -> ',String1),
+    string_concat(String1, Modelo2, String2),
+    string_concat(S, String2, String3),
+    Res = String3.
+calcularRelacion(Fabricante, Modelo1, Modelo2,S,Res) :-
+    relacionar(Fabricante,Modelo1,X),
+    X \== Modelo2,
+    string_concat(Modelo1,' -> ',String1),
+    string_concat(S, String1, String2),
+    calcularRelacion(Fabricante,X,Modelo2,String2,Res).
+/***************************************************************************************************************/
+
+
+
+
+
+validarFabricante(Fabricante):-
+    nuevoVehiculo(Fabricante,vehiculo(_,_,_,_,_)).
+validarFabricante(Fabricante):-
+    \+ nuevoVehiculo(Fabricante,vehiculo(_,_,_,_,_)),
+    write("El no vehiculo existe"),nl.
