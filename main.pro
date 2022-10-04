@@ -184,6 +184,34 @@ esConglomeradoAux(Fabricante, Marca1):-
 
 
 /****************************************************************************************************************/
+
+/*
+nombre: muestraVehiculo
+E: Fabricante -> nombre del fabricante, Modelo->modelo del vehiculo
+S: Información del vehiculo
+R: Debe existir un vehiculo con los valores indicados
+O: Imprimir la información de un vehiculo
+*/
+muestraVehiculo(Fabricante, Modelo):-
+    \+ nuevoVehiculo(Fabricante,vehiculo(_,Modelo,_,_,_)),
+    write("El vehiculo no existe"),nl.
+muestraVehiculo(Fabricante, Modelo):-
+    nuevoVehiculo(Fabricante,vehiculo(Marca,Modelo,Estilo,Cilindraje,Autonomia)),
+    write("----- Informacion del vehiculo -----"),nl,nl,
+    write("Fabricante: "),write(Fabricante), nl,
+    write("Marca: "),write(Marca),nl,
+    write("Modelo: "),write(Modelo),nl,
+    write("Estilo: "),write(Estilo),nl,
+    write("Cilindraje: "),write(Cilindraje),nl,
+    write("Autonomia: "),write(Autonomia),nl,
+    write("------------------------------------").
+/************************************************************************************************************/
+
+
+
+
+
+
 validarFabricante(Fabricante):-
     nuevoVehiculo(Fabricante,vehiculo(_,_,_,_,_)).
 validarFabricante(Fabricante):-
