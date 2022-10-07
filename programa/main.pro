@@ -22,6 +22,8 @@ nuevoVehiculo(nissanMC,vehiculo(nissan, sentra2016, sedan, 1800, 500)).
 
 
 %Relaciona dos vehiculos del mismo fabricante
+
+
 relacionar(toyotaGroup, hilux2021, hilux2022).
 relacionar(fca, compass2019,compass2020).
 relacionar(fca, compass2020, levante2021).
@@ -39,17 +41,26 @@ S: true si es eco amigable, false si no
 R: Debe existir un vehiculo con los argumentos especificados, sino dará false como resultado
 O: Determinar si un modelo es ecoAmigable o no
 */
+
 esEcoAmigable(Fabricante, Modelo):-
+    esEcoAmigableAux(Fabricante, Modelo),
+    write("Es eco amigable").
+esEcoAmigable(Fabricante, Modelo):-
+    \+ esEcoAmigableAux(Fabricante, Modelo),
+    write("Este vehiculo no existe o no es eco amigable"),
+    fail.
+
+esEcoAmigableAux(Fabricante, Modelo):-
     nuevoVehiculo(Fabricante,vehiculo(_,Modelo,Estilo,Cilindraje,Autonomia)),
     Estilo == sedan, Cilindraje < 2000, Autonomia>500,
     write("Estilo: "),write(Estilo),write("    Cilindraje: "),write(Cilindraje),write("  Autonomia: "),write(Autonomia),nl.
 
-esEcoAmigable(Fabricante, Modelo):-
+esEcoAmigableAux(Fabricante, Modelo):-
     nuevoVehiculo(Fabricante,vehiculo(_,Modelo,Estilo,Cilindraje,Autonomia)),
     Estilo == cross, Cilindraje < 2500, Autonomia>450,
     write("Estilo: "),write(Estilo),write("    Cilindraje: "),write(Cilindraje),write("  Autonomia: "),write(Autonomia),nl.
 
-esEcoAmigable(Fabricante, Modelo):-
+esEcoAmigableAux(Fabricante, Modelo):-
     nuevoVehiculo(Fabricante,vehiculo(_,Modelo,Estilo,Cilindraje,Autonomia)),
     Estilo == pickup, Cilindraje < 3000, Autonomia>650,
     write("Estilo: "),write(Estilo),write("    Cilindraje: "),write(Cilindraje),write("  Autonomia: "),write(Autonomia),nl.
@@ -77,6 +88,7 @@ R: El vehículo debe de existir
 O: Determinar si un vehiculo es final (no tiene siguiente)
 */
 esFinal(Fabricante, Modelo):-
+    nuevoVehiculo(Fabricante, vehiculo(_,Modelo,_,_,_)),
     \+ relacionar(Fabricante,Modelo,_),
     write("Es final").
 
@@ -89,6 +101,7 @@ R: El vehículo debe de existir
 O: Determinar si un vehiculo es base (no tiene anterior)
 */
 esBase(Fabricante, Modelo):-
+    nuevoVehiculo(Fabricante, vehiculo(_,Modelo,_,_,_)),
     \+ relacionar(Fabricante,_,Modelo),
     write("Es base").
 
@@ -101,6 +114,7 @@ R: El vehículo debe de existir
 O: Determinar si un vehiculo es intermedio (tiene siguiente y anterior)
 */
 esIntermedio(Fabricante, Modelo):-
+    nuevoVehiculo(Fabricante, vehiculo(_,Modelo,_,_,_)),
     relacionar(Fabricante,Modelo,_),
     relacionar(Fabricante,_,Modelo),
     write("Es intermedio").
@@ -120,7 +134,8 @@ relacionados(Fabricante, Modelo1, Modelo2):-
     write(Res).
 relacionados(Fabricante, Modelo1, Modelo2):-
     \+ relacionadosAux(Fabricante, Modelo1, Modelo2, _),
-    write("No estan relacionados.").
+    write("No estan relacionados."),
+    fail.
 
 relacionadosAux(Fabricante, Modelo1, Modelo2, Res):-
     (calcularRelacion(Fabricante, Modelo1, Modelo2,"",Res2) ; calcularRelacion(Fabricante, Modelo2, Modelo1,"",Res2)),
@@ -162,6 +177,7 @@ esConglomerado(Fabricante):-
     nuevoVehiculo(Fabricante, vehiculo(Marca,_,_,_,_)),
     esConglomeradoAux(Fabricante, Marca),
     write("No es conglomerado"),nl.
+
 esConglomerado(Fabricante):-
     nuevoVehiculo(Fabricante, vehiculo(Marca,_,_,_,_)),
     \+ esConglomeradoAux(Fabricante, Marca),
@@ -194,7 +210,7 @@ O: Imprimir la información de un vehiculo
 */
 muestraVehiculo(Fabricante, Modelo):-
     \+ nuevoVehiculo(Fabricante,vehiculo(_,Modelo,_,_,_)),
-    write("El vehiculo no existe"),nl.
+    write("El vehiculo no existe"),nl,fail.
 muestraVehiculo(Fabricante, Modelo):-
     nuevoVehiculo(Fabricante,vehiculo(Marca,Modelo,Estilo,Cilindraje,Autonomia)),
     write("----- Informacion del vehiculo -----"),nl,nl,
@@ -206,14 +222,3 @@ muestraVehiculo(Fabricante, Modelo):-
     write("Autonomia: "),write(Autonomia),nl,
     write("------------------------------------").
 /************************************************************************************************************/
-
-
-
-
-
-
-validarFabricante(Fabricante):-
-    nuevoVehiculo(Fabricante,vehiculo(_,_,_,_,_)).
-validarFabricante(Fabricante):-
-    \+ nuevoVehiculo(Fabricante,vehiculo(_,_,_,_,_)),
-    write("El no vehiculo existe"),nl.
